@@ -1,0 +1,30 @@
+{
+  "defaultSeverity": "error",
+  "extends": ["tslint:latest", "tslint-react", "tslint-config-prettier"],
+  "jsRules": {},
+  "rules": {
+    "jsx-equals-spacing": [true, "never"],
+    "jsx-key": true,
+    "jsx-no-bind": true,
+    "jsx-self-close": true,
+    "jsx-space-before-trailing-slash": true,
+    "interface-name": [true, "never-prefix"],
+    "jsx-no-string-ref": true,
+    "jsx-wrap-multiline": true,
+    "no-require-imports": true,
+    "no-implicit-dependencies": false,
+    "no-submodule-imports": false,
+    "member-access": false,
+    "object-literal-sort-keys": false,
+    "ordered-imports": [
+      false,
+      {
+        "grouped-imports": true
+      }
+    ]
+  },
+  "rulesDirectory": [],
+  "linterOptions": {
+    "exclude": ["config/**/*.js", "node_modules/**/*.ts"]
+  }
+}
