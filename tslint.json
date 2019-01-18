@@ -16,6 +16,7 @@
     "no-submodule-imports": false,
     "member-access": false,
     "object-literal-sort-keys": false,
+    "curly": [true, "ignore-same-line"],
     "ordered-imports": [
       false,
       {

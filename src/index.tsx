@@ -10,7 +10,7 @@ export default class ExampleComponent extends React.Component<Props> {
   public render() {
     return (
       <div>
-        Type: <Text charInterval={200}>This is type component</Text>
+        Type: <Text charInterval={-200}>This is type component</Text>
         <br />
         Delete:
         <Text type="delete" charInterval={500}>
