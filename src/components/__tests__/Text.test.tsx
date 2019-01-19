@@ -8,6 +8,22 @@ import { EMPTY_STRING } from '../../constants';
 beforeEach(jest.useFakeTimers);
 
 describe('Text Component', () => {
+  it('does not try to set state on unmounted component', () => {
+    fc.assert(
+      fc.property(fc.string(), fc.integer(), (text, interval) => {
+        const mockConsoleError = jest.spyOn(console, 'error');
+        const { unmount } = render(<Text charInterval={interval}>{text}</Text>);
+
+        unmount();
+        jest.runOnlyPendingTimers();
+
+        expect(mockConsoleError).not.toBeCalled();
+
+        mockConsoleError.mockRestore();
+      }),
+    );
+  });
+
   it('calls onComplete() when finish rendering whole text', () => {
     fc.assert(
       fc.property(
@@ -15,6 +31,7 @@ describe('Text Component', () => {
         fc.integer(-100000, 100000),
         (text, interval) => {
           const onCompleteMock = jest.fn();
+
           render(
             <Text charInterval={interval} onComplete={onCompleteMock}>
               {text}
@@ -39,6 +56,7 @@ describe('Text Component', () => {
             const { container } = render(
               <Text charInterval={interval}>{text}</Text>,
             );
+
             expect(container).toHaveTextContent(EMPTY_STRING);
 
             if (interval <= 0) {
@@ -62,26 +80,31 @@ describe('Text Component', () => {
   describe('delete mode', () => {
     it('deletes subsequent characters every specified interval', () => {
       fc.assert(
-        fc.property(fc.string(), fc.integer(0, 100000), (text, interval) => {
-          const { container } = render(
-            <Text charInterval={interval} type="delete">
-              {text}
-            </Text>,
-          );
+        fc.property(
+          fc.string(),
+          fc.integer(-100000, 100000),
+          (text, interval) => {
+            const { container } = render(
+              <Text charInterval={interval} type="delete">
+                {text}
+              </Text>,
+            );
 
-          expect(container.textContent).toBe(text);
-          if (interval <= 0) {
-            jest.advanceTimersByTime(0);
-            expect(container.textContent).toBe(EMPTY_STRING);
-          } else {
-            // tslint:disable-next-line
-            for (let i = 0; i < text.length; i++) {
-              jest.advanceTimersByTime(interval);
-              const currentText = text.substring(i + 1);
-              expect(container.textContent).toBe(currentText);
+            expect(container.textContent).toBe(text);
+
+            if (interval <= 0) {
+              jest.advanceTimersByTime(0);
+              expect(container.textContent).toBe(EMPTY_STRING);
+            } else {
+              // tslint:disable-next-line
+              for (let i = 0; i < text.length; i++) {
+                jest.advanceTimersByTime(interval);
+                const currentText = text.substring(i + 1);
+                expect(container.textContent).toBe(currentText);
+              }
             }
-          }
-        }),
+          },
+        ),
       );
     });
   });
@@ -89,26 +112,31 @@ describe('Text Component', () => {
   describe('backspace mode', () => {
     it('backspaces subsequent characters every specified interval', () => {
       fc.assert(
-        fc.property(fc.string(), fc.integer(0, 100000), (text, interval) => {
-          const { container } = render(
-            <Text charInterval={interval} type="backspace">
-              {text}
-            </Text>,
-          );
-          expect(container.textContent).toBe(text);
+        fc.property(
+          fc.string(),
+          fc.integer(-100000, 100000),
+          (text, interval) => {
+            const { container } = render(
+              <Text charInterval={interval} type="backspace">
+                {text}
+              </Text>,
+            );
 
-          if (interval <= 0) {
-            jest.advanceTimersByTime(0);
-            expect(container.textContent).toBe(EMPTY_STRING);
-          } else {
-            // tslint:disable-next-line
-            for (let i = text.length - 1; i >= 0; i--) {
-              jest.advanceTimersByTime(interval);
-              const currentText = text.substring(0, i);
-              expect(container.textContent).toBe(currentText);
+            expect(container.textContent).toBe(text);
+
+            if (interval <= 0) {
+              jest.advanceTimersByTime(0);
+              expect(container.textContent).toBe(EMPTY_STRING);
+            } else {
+              // tslint:disable-next-line
+              for (let i = text.length - 1; i >= 0; i--) {
+                jest.advanceTimersByTime(interval);
+                const currentText = text.substring(0, i);
+                expect(container.textContent).toBe(currentText);
+              }
             }
-          }
-        }),
+          },
+        ),
       );
     });
   });
