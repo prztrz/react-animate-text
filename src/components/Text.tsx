@@ -7,7 +7,7 @@ import { Animation } from '../types';
 interface Props {
   children: string;
   charInterval: number;
-  type?: Animation;
+  animation?: Animation;
   onComplete?: () => void;
 }
 
@@ -48,7 +48,7 @@ export default class Text extends React.Component<Props, State> {
   }
 
   render() {
-    const { children, type } = this.props;
+    const { children, animation: type } = this.props;
     const { currentCharIndex } = this.state;
     switch (type) {
       case 'delete':

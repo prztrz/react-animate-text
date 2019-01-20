@@ -11,7 +11,7 @@ export default class ExampleComponent extends React.Component<Props> {
     return (
       <div>
         Core:{' '}
-        <TextAnim charInterval={-200}>
+        <TextAnim charInterval={200}>
           <span style={{ color: 'red' }}>
             <div>heyo</div>
             ojoj
@@ -22,6 +22,9 @@ export default class ExampleComponent extends React.Component<Props> {
             </span>
             <small>OMG</small>
           </span>
+        </TextAnim>
+        <TextAnim animation="delete">
+          delet<strong>dedededed</strong>eme
         </TextAnim>
       </div>
     );

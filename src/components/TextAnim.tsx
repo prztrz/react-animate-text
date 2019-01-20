@@ -31,7 +31,7 @@ export default class TextAnim extends React.Component<Props, State> {
     const { children, charInterval, animation } = this.props;
     const { currentText } = this.state;
 
-    return wrapChildren(children, currentText, {
+    return wrapChildren(children, currentText, animation, {
       charInterval,
       animation,
       onComplete: this.increaseCurrentText,

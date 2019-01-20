@@ -1,14 +1,15 @@
 import * as React from 'react';
 
 import Text from '../components/Text';
-import { ExpectedProps } from '../types';
+import { ExpectedProps, Animation } from '../types';
 import { EMPTY_STRING } from '../constants';
 
-export default (
+export default function(
   allChildren: React.ReactNode,
   wrappedTextIndex: number = 0,
-  textProps: React.ComponentProps<typeof Text>,
-) => {
+  animation: Animation = 'type',
+  textProps: Partial<React.ComponentProps<typeof Text>>,
+) {
   let textCounter = 0;
 
   const wrapChildren = (children: React.ReactNode): React.ReactNode => {
@@ -28,11 +29,20 @@ export default (
           return <Text {...textProps}>{String(child as string | number)}</Text>;
         }
 
-        if (textCounter > wrappedTextIndex) {
-          return EMPTY_STRING;
+        if (animation === 'delete') {
+          if (textCounter < wrappedTextIndex) {
+            textCounter++;
+            return EMPTY_STRING;
+          }
         }
 
-        textCounter++;
+        if (animation === 'type') {
+          if (textCounter > wrappedTextIndex) {
+            textCounter++;
+            return EMPTY_STRING;
+          }
+          textCounter++;
+        }
       }
 
       return child;
@@ -40,4 +50,4 @@ export default (
   };
 
   return wrapChildren(allChildren);
-};
+}

@@ -80,7 +80,7 @@ describe('Text Component', () => {
         fc
           .property(fc.string(), fc.integer(1, 100000), (text, interval) => {
             const { container } = render(
-              <Text charInterval={interval} type="delete">
+              <Text charInterval={interval} animation="delete">
                 {text}
               </Text>,
             );
@@ -105,7 +105,7 @@ describe('Text Component', () => {
         fc
           .property(fc.string(), fc.integer(1, 100000), (text, interval) => {
             const { container } = render(
-              <Text charInterval={interval} type="backspace">
+              <Text charInterval={interval} animation="backspace">
                 {text}
               </Text>,
             );
