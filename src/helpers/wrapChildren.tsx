@@ -4,6 +4,32 @@ import Text from '../components/Text';
 import { ExpectedProps, Animation } from '../types';
 import { EMPTY_STRING } from '../constants';
 
+const getTextElement = (
+  child: string | number,
+  wrappedTextIndex: number,
+  textCounter: number,
+  animation: Animation = 'type',
+  textProps: Partial<React.ComponentProps<typeof Text>>,
+) => {
+  if (textCounter === wrappedTextIndex) {
+    return (
+      <Text key={textCounter} {...textProps}>
+        {String(child)}
+      </Text>
+    );
+  }
+
+  const isBeforeWrappedText = textCounter < wrappedTextIndex;
+  const isAfterWrappedText = textCounter > wrappedTextIndex;
+  const isRemovingAnimation = ['delete', 'backspace'].includes(animation);
+
+  return (
+    ((isBeforeWrappedText && isRemovingAnimation) ||
+      (isAfterWrappedText && animation === 'type')) &&
+    EMPTY_STRING
+  );
+};
+
 export default function(
   allChildren: React.ReactNode,
   wrappedTextIndex: number = 0,
@@ -13,7 +39,12 @@ export default function(
   let textCounter = 0;
 
   const wrapChildren = (children: React.ReactNode): React.ReactNode => {
-    return React.Children.map(children, child => {
+    const childrenArray =
+      animation === 'backspace'
+        ? React.Children.toArray(children).reverse()
+        : React.Children.toArray(children);
+
+    const wrappedChildren = childrenArray.map(child => {
       if (React.isValidElement<ExpectedProps>(child) && child.props.children) {
         const cloned: React.ReactNode = React.cloneElement(child, {
           ...child.props,
@@ -24,29 +55,25 @@ export default function(
       }
 
       if (['string', 'number'].includes(typeof child)) {
-        if (textCounter === wrappedTextIndex) {
-          textCounter++;
-          return <Text {...textProps}>{String(child as string | number)}</Text>;
-        }
+        const currentElement = getTextElement(
+          child as string | number,
+          wrappedTextIndex,
+          textCounter,
+          animation,
+          textProps,
+        );
 
-        if (animation === 'delete') {
-          if (textCounter < wrappedTextIndex) {
-            textCounter++;
-            return EMPTY_STRING;
-          }
-        }
+        textCounter++;
 
-        if (animation === 'type') {
-          if (textCounter > wrappedTextIndex) {
-            textCounter++;
-            return EMPTY_STRING;
-          }
-          textCounter++;
-        }
+        return currentElement || currentElement === EMPTY_STRING || child;
       }
 
       return child;
     });
+
+    return animation === 'backspace'
+      ? wrappedChildren.reverse()
+      : wrappedChildren;
   };
 
   return wrapChildren(allChildren);

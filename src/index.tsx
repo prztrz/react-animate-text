@@ -26,6 +26,18 @@ export default class ExampleComponent extends React.Component<Props> {
         <TextAnim animation="delete">
           delet<strong>dedededed</strong>eme
         </TextAnim>
+        <br />
+        <TextAnim animation="backspace">
+          <div style={{ color: 'green' }}>
+            1111
+            <strong>
+              22222
+              <div />
+              33333
+            </strong>
+            4444
+          </div>
+        </TextAnim>
       </div>
     );
   }
