@@ -2,10 +2,12 @@ import * as React from 'react';
 import { interval, Subscription } from 'rxjs';
 import { take, map } from 'rxjs/operators';
 
+import { Animation } from '../types';
+
 interface Props {
   children: string;
   charInterval: number;
-  type?: 'type' | 'delete' | 'backspace';
+  type?: Animation;
   onComplete?: () => void;
 }
 
@@ -19,7 +21,7 @@ const getSource$ = (charInterval: number, limit: number) =>
     take(limit),
   );
 
-export default class Type extends React.Component<Props, State> {
+export default class Text extends React.Component<Props, State> {
   static defaultProps = {
     charInterval: 200,
     type: 'type',
