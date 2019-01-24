@@ -2,7 +2,7 @@ import * as React from 'react';
 import * as fc from 'fast-check';
 import { render, cleanup } from 'react-testing-library';
 
-import TextAnim from '../TextAnim';
+import TextAnim from '../TextAnimation';
 import { EMPTY_STRING } from '../../constants';
 
 describe('Core component', () => {

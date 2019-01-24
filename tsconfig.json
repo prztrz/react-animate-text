@@ -19,7 +19,8 @@
     "noUnusedParameters": true,
     "removeComments": true,
     "preserveConstEnums": true,
-    "skipLibCheck": true
+    "skipLibCheck": true,
+    "esModuleInterop": true
   },
   "include": ["./src/**/*"],
   "exclude": ["node_modules", "build", "dist", "example", "rollup.config.js"]
