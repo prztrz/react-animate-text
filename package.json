@@ -1,7 +1,7 @@
 {
-  "name": "react-typewriter",
-  "version": "1.0.0",
-  "description": "Lightweight tool to render strings letter by letter",
+  "name": "react-animate-text",
+  "version": "0.1.2",
+  "description": "React tool for common text animations written in typescript",
   "author": "prztrz",
   "license": "MIT",
   "repository": "prztrz/react-typewriter",
