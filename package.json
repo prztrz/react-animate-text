@@ -20,7 +20,8 @@
     "prepare": "yarn run build",
     "predeploy": "cd example && yarn install && yarn run build",
     "deploy": "gh-pages -d example/build",
-    "tslint": "node_modules/.bin/tslint --project tsconfig.json 'src /**/*.tsx' 'src /**/*.ts'"
+    "tslint": "node_modules/.bin/tslint --project tsconfig.json 'src /**/*.tsx' 'src /**/*.ts'",
+    "test:all": "yarn tslint && yarn test"
   },
   "dependencies": {
     "frint-react": "^5.7.2",
