@@ -2,8 +2,9 @@ import * as React from 'react';
 
 import { wrapChildren } from '../helpers';
 import { Animation } from '../types';
+import { Provider } from '../context';
 
-interface Props {
+export interface Props {
   children: React.ReactNode;
   charInterval: number;
   animation?: Animation;
@@ -11,7 +12,7 @@ interface Props {
 }
 
 interface State {
-  currentText: number;
+  currentTextIndex: number;
 }
 
 export default class TextAnim extends React.Component<Props, State> {
@@ -21,20 +22,27 @@ export default class TextAnim extends React.Component<Props, State> {
   };
 
   state = {
-    currentText: 0,
+    currentTextIndex: 0,
   };
 
   increaseCurrentText = () =>
-    this.setState(({ currentText }) => ({ currentText: currentText + 1 }));
+    this.setState(({ currentTextIndex }) => ({
+      currentTextIndex: currentTextIndex + 1,
+    }));
 
   render() {
     const { children, charInterval, animation } = this.props;
-    const { currentText } = this.state;
-
-    return wrapChildren(children, currentText, animation, {
-      charInterval,
-      animation,
-      onComplete: this.increaseCurrentText,
-    });
+    const { currentTextIndex: currentText } = this.state;
+    return (
+      <Provider
+        value={{
+          charInterval,
+          animation,
+          onComplete: this.increaseCurrentText,
+        }}
+      >
+        {wrapChildren(children, currentText, animation)}
+      </Provider>
+    );
   }
 }

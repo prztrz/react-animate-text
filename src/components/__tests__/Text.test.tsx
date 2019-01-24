@@ -1,6 +1,7 @@
 import * as React from 'react';
 import * as fc from 'fast-check';
 import { render, cleanup } from 'react-testing-library';
+import { Provider } from '../../context';
 
 import Text from '../Text';
 import { EMPTY_STRING } from '../../constants';
@@ -11,10 +12,12 @@ describe('Text Component', () => {
   it('does not set state on unmounted component', () => {
     fc.assert(
       fc
-        .property(fc.string(), fc.integer(), (text, interval) => {
+        .property(fc.string(), fc.integer(), (text, charInterval) => {
           const mockConsoleError = jest.spyOn(console, 'error');
           const { unmount } = render(
-            <Text charInterval={interval}>{text}</Text>,
+            <Provider value={{ charInterval }}>
+              <Text>{text}</Text>
+            </Provider>,
           );
 
           unmount();
@@ -32,17 +35,17 @@ describe('Text Component', () => {
   it('calls onComplete() when finish rendering whole text', () => {
     fc.assert(
       fc
-        .property(fc.string(), fc.integer(1, 100000), (text, interval) => {
-          const onCompleteMock = jest.fn();
+        .property(fc.string(), fc.integer(1, 100000), (text, charInterval) => {
+          const onComplete = jest.fn();
 
           render(
-            <Text charInterval={interval} onComplete={onCompleteMock}>
-              {text}
-            </Text>,
+            <Provider value={{ charInterval, onComplete }}>
+              <Text>{text}</Text>
+            </Provider>,
           );
 
-          jest.advanceTimersByTime(interval * text.length);
-          expect(onCompleteMock).toBeCalledTimes(1);
+          jest.advanceTimersByTime(charInterval * text.length);
+          expect(onComplete).toBeCalledTimes(1);
         })
         .afterEach(cleanup)
         .beforeEach(jest.useFakeTimers),
@@ -53,21 +56,27 @@ describe('Text Component', () => {
     it('renders subsequent characters every specified interval', async () => {
       fc.assert(
         fc
-          .property(fc.string(), fc.integer(1, 100000), (text, interval) => {
-            const { container } = render(
-              <Text charInterval={interval}>{text}</Text>,
-            );
+          .property(
+            fc.string(),
+            fc.integer(1, 100000),
+            (text, charInterval) => {
+              const { container } = render(
+                <Provider value={{ charInterval }}>
+                  <Text>{text}</Text>
+                </Provider>,
+              );
 
-            expect(container).toHaveTextContent(EMPTY_STRING);
+              expect(container).toHaveTextContent(EMPTY_STRING);
 
-            Array.from(text).reduce((str, char) => {
-              jest.advanceTimersByTime(interval);
-              const currentText = str + char;
-              expect(container.textContent).toBe(currentText);
+              Array.from(text).reduce((str, char) => {
+                jest.advanceTimersByTime(charInterval);
+                const currentText = str + char;
+                expect(container.textContent).toBe(currentText);
 
-              return currentText;
-            }, '');
-          })
+                return currentText;
+              }, '');
+            },
+          )
           .afterEach(cleanup)
           .beforeEach(jest.useFakeTimers),
       );
@@ -78,21 +87,25 @@ describe('Text Component', () => {
     it('deletes subsequent characters every specified interval', () => {
       fc.assert(
         fc
-          .property(fc.string(), fc.integer(1, 100000), (text, interval) => {
-            const { container } = render(
-              <Text charInterval={interval} animation="delete">
-                {text}
-              </Text>,
-            );
+          .property(
+            fc.string(),
+            fc.integer(1, 100000),
+            (text, charInterval) => {
+              const { container } = render(
+                <Provider value={{ charInterval, animation: 'delete' }}>
+                  <Text>{text}</Text>
+                </Provider>,
+              );
 
-            expect(container.textContent).toBe(text);
+              expect(container.textContent).toBe(text);
 
-            for (let i = 0; i < text.length; i++) {
-              jest.advanceTimersByTime(interval);
-              const currentText = text.substring(i + 1);
-              expect(container.textContent).toBe(currentText);
-            }
-          })
+              for (let i = 0; i < text.length; i++) {
+                jest.advanceTimersByTime(charInterval);
+                const currentText = text.substring(i + 1);
+                expect(container.textContent).toBe(currentText);
+              }
+            },
+          )
           .afterEach(cleanup)
           .beforeEach(jest.useFakeTimers),
       );
@@ -103,21 +116,25 @@ describe('Text Component', () => {
     it('backspaces subsequent characters every specified interval', () => {
       fc.assert(
         fc
-          .property(fc.string(), fc.integer(1, 100000), (text, interval) => {
-            const { container } = render(
-              <Text charInterval={interval} animation="backspace">
-                {text}
-              </Text>,
-            );
+          .property(
+            fc.string(),
+            fc.integer(1, 100000),
+            (text, charInterval) => {
+              const { container } = render(
+                <Provider value={{ charInterval, animation: 'backspace' }}>
+                  <Text>{text}</Text>
+                </Provider>,
+              );
 
-            expect(container.textContent).toBe(text);
+              expect(container.textContent).toBe(text);
 
-            for (let i = text.length - 1; i >= 0; i--) {
-              jest.advanceTimersByTime(interval);
-              const currentText = text.substring(0, i);
-              expect(container.textContent).toBe(currentText);
-            }
-          })
+              for (let i = text.length - 1; i >= 0; i--) {
+                jest.advanceTimersByTime(charInterval);
+                const currentText = text.substring(0, i);
+                expect(container.textContent).toBe(currentText);
+              }
+            },
+          )
           .afterEach(cleanup)
           .beforeEach(jest.useFakeTimers),
       );

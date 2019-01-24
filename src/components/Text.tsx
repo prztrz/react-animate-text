@@ -2,13 +2,11 @@ import * as React from 'react';
 import { interval, Subscription } from 'rxjs';
 import { take, map } from 'rxjs/operators';
 
-import { Animation } from '../types';
+import TextAnimation from './TextAnimation';
+import context from '../context';
 
-interface Props {
+export interface Props {
   children: string;
-  charInterval: number;
-  animation?: Animation;
-  onComplete?: () => void;
 }
 
 interface State {
@@ -22,6 +20,9 @@ const getSource$ = (charInterval: number, limit: number) =>
   );
 
 export default class Text extends React.Component<Props, State> {
+  static contextType: React.Context<
+    Partial<React.ComponentPropsWithoutRef<typeof TextAnimation>>
+  > = context;
   static defaultProps = {
     charInterval: 200,
     type: 'type',
@@ -34,7 +35,8 @@ export default class Text extends React.Component<Props, State> {
   };
 
   componentDidMount() {
-    const { charInterval, children, onComplete } = this.props;
+    const { children } = this.props;
+    const { charInterval, onComplete } = this.context;
 
     this.subscription = getSource$(charInterval, children.length).subscribe({
       next: currentCharIndex => {
@@ -48,9 +50,11 @@ export default class Text extends React.Component<Props, State> {
   }
 
   render() {
-    const { children, animation: type } = this.props;
+    const { children } = this.props;
     const { currentCharIndex } = this.state;
-    switch (type) {
+    const { animation } = this.context;
+
+    switch (animation) {
       case 'delete':
         return <>{children.substring(currentCharIndex)}</>;
       case 'backspace':
