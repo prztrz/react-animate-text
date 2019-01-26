@@ -4,7 +4,7 @@
   "description": "React tool for common text animations written in typescript",
   "author": "prztrz",
   "license": "MIT",
-  "repository": "prztrz/react-typewriter",
+  "repository": "prztrz/prztrz/react-animate-text",
   "main": "dist/index.js",
   "module": "dist/index.es.js",
   "jsnext:main": "dist/index.es.js",
@@ -24,7 +24,6 @@
     "test:all": "yarn tslint && yarn test"
   },
   "dependencies": {
-    "frint-react": "^5.7.2",
     "rxjs": "^6.3.3"
   },
   "peerDependencies": {
