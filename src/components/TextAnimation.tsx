@@ -9,6 +9,7 @@ export interface Props {
   charInterval: number;
   animation?: Animation;
   onComplete?: () => void;
+  onNextChar?: (currentText: string) => void;
 }
 
 interface State {
@@ -31,7 +32,7 @@ export default class TextAnim extends React.Component<Props, State> {
     }));
 
   render() {
-    const { children, charInterval, animation } = this.props;
+    const { children, charInterval, animation, onNextChar } = this.props;
     const { currentTextIndex: currentText } = this.state;
     return (
       <Provider
@@ -39,6 +40,7 @@ export default class TextAnim extends React.Component<Props, State> {
           charInterval,
           animation,
           onComplete: this.increaseCurrentText,
+          onNextChar,
         }}
       >
         {wrapChildren(children, currentText, animation)}

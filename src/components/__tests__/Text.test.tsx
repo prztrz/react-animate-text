@@ -52,6 +52,32 @@ describe('Text Component', () => {
     );
   });
 
+  it('calls onNextChar with current text every animation frame', () => {
+    fc.assert(
+      fc
+        .property(fc.string(), fc.integer(1, 100000), (text, charInterval) => {
+          const onNextChar = jest.fn();
+          render(
+            <Provider value={{ charInterval, onNextChar }}>
+              <Text>{text}</Text>
+            </Provider>,
+          );
+
+          expect(onNextChar).not.toBeCalled();
+
+          Array.from(text).reduce((str, char) => {
+            jest.advanceTimersByTime(charInterval);
+            const currentText = str + char;
+            expect(onNextChar).toBeCalledWith(currentText);
+
+            return currentText;
+          }, '');
+        })
+        .afterEach(cleanup)
+        .beforeEach(jest.useFakeTimers),
+    );
+  });
+
   describe('type mode', () => {
     it('renders subsequent characters every specified interval', async () => {
       fc.assert(

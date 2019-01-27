@@ -5,7 +5,25 @@ import { render, cleanup } from 'react-testing-library';
 import TextAnim from '../TextAnimation';
 import { EMPTY_STRING } from '../../constants';
 
-describe('Core component', () => {
+describe('TextAnimation', () => {
+  it('calls onNextChar every text animation frame', () => {
+    fc.assert(
+      fc
+        .property(fc.string(), fc.integer(1, 100000), (text, interval) => {
+          const onNextCharMock = jest.fn();
+          render(
+            <TextAnim charInterval={interval} onNextChar={onNextCharMock}>
+              {text}
+            </TextAnim>,
+          );
+
+          jest.advanceTimersByTime(interval * text.length);
+          expect(onNextCharMock).toBeCalledTimes(text.length);
+        })
+        .afterEach(cleanup)
+        .beforeEach(jest.useFakeTimers),
+    );
+  });
   describe('type mode', () => {
     it('animates unnested text', () => {
       fc.assert(

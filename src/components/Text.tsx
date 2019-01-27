@@ -10,7 +10,7 @@ export interface Props {
 }
 
 interface State {
-  currentCharIndex: number;
+  currentText: string;
 }
 
 const getSource$ = (charInterval: number, limit: number) =>
@@ -23,6 +23,7 @@ export default class Text extends React.Component<Props, State> {
   static contextType: React.Context<
     Partial<React.ComponentPropsWithoutRef<typeof TextAnimation>>
   > = context;
+
   static defaultProps = {
     charInterval: 200,
     type: 'type',
@@ -31,7 +32,7 @@ export default class Text extends React.Component<Props, State> {
   subscription: Subscription;
 
   state = {
-    currentCharIndex: 0,
+    currentText: this.context.animation === 'type' ? '' : this.props.children,
   };
 
   componentDidMount() {
@@ -39,9 +40,11 @@ export default class Text extends React.Component<Props, State> {
     const { charInterval, onComplete } = this.context;
 
     this.subscription = getSource$(charInterval, children.length).subscribe({
-      next: currentCharIndex => {
-        this.setState({ currentCharIndex });
-      },
+      next: index =>
+        this.setState(
+          { currentText: this.getCurrentText(index) },
+          this.onNextChar,
+        ),
       complete: () => onComplete && onComplete(),
     });
   }
@@ -49,19 +52,27 @@ export default class Text extends React.Component<Props, State> {
     this.subscription.unsubscribe();
   }
 
-  render() {
-    const { children } = this.props;
-    const { currentCharIndex } = this.state;
+  getCurrentText = (currentCharIndex: number) => {
     const { animation } = this.context;
+    const { children } = this.props;
 
     switch (animation) {
       case 'delete':
-        return <>{children.substring(currentCharIndex)}</>;
+        return children.substring(currentCharIndex);
       case 'backspace':
-        return <>{children.substring(0, children.length - currentCharIndex)}</>;
+        return children.substring(0, children.length - currentCharIndex);
       case 'type':
       default:
-        return <>{children.substring(0, currentCharIndex)}</>;
+        return children.substring(0, currentCharIndex);
     }
+  };
+
+  onNextChar = () => {
+    const { currentText } = this.state;
+    return this.context.onNextChar && this.context.onNextChar(currentText);
+  };
+
+  render() {
+    return this.state.currentText;
   }
 }

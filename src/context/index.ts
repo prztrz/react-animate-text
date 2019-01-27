@@ -7,6 +7,7 @@ const context = React.createContext<
   charInterval: 200,
   animation: 'type',
   onComplete: undefined,
+  onNextChar: undefined,
 });
 
 export default context;
