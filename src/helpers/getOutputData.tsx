@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import Text from '../components/Text';
+import TextWrapper from '../components/TextWrapper';
 import { ExpectedProps, Animation } from '../types';
 import { EMPTY_STRING } from '../constants';
 
@@ -30,7 +30,9 @@ export default function(
         textCounter++;
 
         if (textPosition === 0) {
-          return <Text key={textCounter}>{String(child)}</Text>;
+          return (
+            <TextWrapper key={textCounter} text={child as number | string} />
+          );
         }
 
         return (textPosition > 0 && animation === 'type') ||
@@ -47,5 +49,10 @@ export default function(
       : wrappedChildren;
   };
 
-  return wrapChildren(allChildren);
+  const output = wrapChildren(allChildren);
+
+  return {
+    output,
+    isLastText: textCounter - wrappedTextIndex === 1,
+  };
 }

@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import { wrapChildren } from '../helpers';
+import { getOutputData } from '../helpers';
 import { Animation } from '../types';
 import { Provider } from '../context';
 
@@ -10,6 +10,7 @@ export interface Props {
   animation?: Animation;
   onComplete?: () => void;
   onNextChar?: (currentText: string) => void;
+  caret?: React.ReactNode;
 }
 
 interface State {
@@ -32,18 +33,25 @@ export default class TextAnim extends React.Component<Props, State> {
     }));
 
   render() {
-    const { children, charInterval, animation, onNextChar } = this.props;
-    const { currentTextIndex: currentText } = this.state;
+    const { children, charInterval, animation, onNextChar, caret } = this.props;
+    const { currentTextIndex } = this.state;
+    const { output, isLastText } = getOutputData(
+      children,
+      currentTextIndex,
+      animation,
+    );
+
     return (
       <Provider
         value={{
           charInterval,
           animation,
-          onComplete: this.increaseCurrentText,
+          onComplete: isLastText ? null : this.increaseCurrentText,
           onNextChar,
+          caret,
         }}
       >
-        {wrapChildren(children, currentText, animation)}
+        {output}
       </Provider>
     );
   }

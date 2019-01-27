@@ -8,7 +8,8 @@ const context = React.createContext<
   animation: 'type',
   onComplete: undefined,
   onNextChar: undefined,
+  caret: undefined,
 });
 
 export default context;
-export const { Provider } = context;
+export const { Provider, Consumer } = context;

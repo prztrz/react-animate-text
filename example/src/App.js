@@ -7,12 +7,17 @@ export default class App extends Component {
     return (
       <div>
         <TextAnimation
+          charInterval={20}
           animation="backspace"
-          onNextChar={() => {
-            console.log('ahoh');
-          }}
+          caret="[x]"
+          // onNextChar={() => {
+          //   console.log('ahoh');
+          // }}
         >
-          OH YEAH
+          <div>text count: 1</div>
+          <div>
+            text count:2 <div>textcount: 3</div>
+          </div>
         </TextAnimation>
       </div>
     );

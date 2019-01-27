@@ -1,1 +1,1 @@
-export { default as wrapChildren } from './wrapChildren';
+export { default as getOutputData } from './getOutputData';

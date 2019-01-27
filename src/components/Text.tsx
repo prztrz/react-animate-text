@@ -7,6 +7,7 @@ import context from '../context';
 
 export interface Props {
   children: string;
+  isLastOne?: boolean;
 }
 
 interface State {
