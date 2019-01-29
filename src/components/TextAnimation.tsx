@@ -17,7 +17,7 @@ interface State {
   currentTextIndex: number;
 }
 
-export default class TextAnim extends React.Component<Props, State> {
+export default class TextAnimation extends React.Component<Props, State> {
   static defaultProps = {
     animation: 'type',
     charInterval: 200,
