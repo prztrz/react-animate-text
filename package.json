@@ -1,6 +1,6 @@
 {
   "name": "react-animate-text",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "description": "React tool for common text animations written in typescript",
   "author": "prztrz",
   "license": "MIT",
