@@ -2,7 +2,7 @@
 
 > React tool for common text animations written in typescript
 
-[![NPM](https://img.shields.io/npm/v/react-typewriter.svg)](https://www.npmjs.com/package/react-typewriter) [![JavaScript Style Guide](https://img.shields.io/badge/code_style-standard-brightgreen.svg)](https://standardjs.com)
+[![NPM](https://img.shields.io/npm/v/react-typewriter.svg)](https://www.npmjs.com/package/react-animate-text) [![JavaScript Style Guide](https://img.shields.io/badge/code_style-standard-brightgreen.svg)](https://standardjs.com)
 
 ## Install
 
