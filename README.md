@@ -6,9 +6,11 @@
 
 ## Install
 
+You need to install this along with [rxjs](https://github.com/ReactiveX/rxjs) as it is peer dependency.
+
 ```bash
-npm install react-animate-text
-yarn add react-animate-text
+npm install react-animate-text rxjs
+yarn add react-animate-text rxjs
 ```
 
 ## Usage
